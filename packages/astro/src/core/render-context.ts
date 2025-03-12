@@ -208,6 +208,7 @@ export class RenderContext {
 				}
 			}
 
+			console.log('this.routeData.type', this.routeData.type);
 			switch (this.routeData.type) {
 				case 'endpoint': {
 					response = await renderEndpoint(
@@ -222,6 +223,9 @@ export class RenderContext {
 					return renderRedirect(this);
 				case 'page': {
 					const result = await this.createResult(componentInstance!, actionApiContext);
+
+					console.log('CASE PAGE');
+
 					try {
 						response = await renderPage(
 							result,

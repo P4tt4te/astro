@@ -15,6 +15,7 @@ export async function renderPage(
 	streaming: boolean,
 	route?: RouteData,
 ): Promise<Response> {
+	console.log('renderPage : ', componentFactory?.name, props, children, streaming, route);
 	if (!isAstroComponentFactory(componentFactory)) {
 		result._metadata.headInTree =
 			result.componentMetadata.get((componentFactory as any).moduleId)?.containsHead ?? false;
@@ -31,6 +32,8 @@ export async function renderPage(
 			route,
 		);
 
+		console.log('renderPage', str);
+
 		const bytes = encoder.encode(str);
 
 		return new Response(bytes, {
@@ -39,6 +42,8 @@ export async function renderPage(
 				['Content-Length', bytes.byteLength.toString()],
 			]),
 		});
+	} else {
+		console.warn('Not a component factory');
 	}
 
 	// Mark if this page component contains a <head> within its tree. If it does
@@ -67,6 +72,7 @@ export async function renderPage(
 		}
 	} else {
 		body = await renderToString(result, componentFactory, props, children, true, route);
+		console.log('RENDER PAGE : ', body);
 	}
 
 	// If the Astro component returns a Response on init, return that response

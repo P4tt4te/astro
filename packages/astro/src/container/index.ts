@@ -12,7 +12,7 @@ import { RenderContext } from '../core/render-context.js';
 import { getParts } from '../core/routing/manifest/parts.js';
 import { getPattern } from '../core/routing/manifest/pattern.js';
 import { validateSegment } from '../core/routing/manifest/segment.js';
-import type { AstroComponentFactory } from '../runtime/server/index.js';
+import { markHTMLString, type AstroComponentFactory } from '../runtime/server/index.js';
 import type { ComponentInstance } from '../types/astro.js';
 import type { AstroMiddlewareInstance, MiddlewareHandler, Props } from '../types/public/common.js';
 import type { AstroConfig, AstroUserConfig } from '../types/public/config.js';
@@ -474,6 +474,10 @@ export class experimental_AstroContainer {
 		component: AstroComponentFactory,
 		options: ContainerRenderOptions = {},
 	): Promise<string> {
+		if (options.slots) {
+			options.slots = markAllSlotsAsHTMLString(options.slots);
+		}
+
 		const response = await this.renderToResponse(component, options);
 		return await response.text();
 	}
@@ -587,4 +591,12 @@ export class experimental_AstroContainer {
 
 function isNamedRenderer(renderer: any): renderer is NamedSSRLoadedRendererValue {
 	return !!renderer?.name;
+}
+
+function markAllSlotsAsHTMLString(slots: Record<string, any>): Record<string, any> {
+	const markedSlots: Record<string, any> = {};
+	for (const slotName in slots) {
+		markedSlots[slotName] = markHTMLString(slots[slotName]);
+	}
+	return markedSlots;
 }

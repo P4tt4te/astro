@@ -30,10 +30,13 @@ export class AstroComponentInstance {
 		this.props = props;
 		this.factory = factory;
 		this.slotValues = {};
+
+		console.log('AstroComponentInstance : ', slots);
 		for (const name in slots) {
 			// prerender the slots eagerly to make collection entries propagate styles and scripts
 			let didRender = false;
 			let value = slots[name](result);
+			console.log("pre-rendered slot : ", value);
 			this.slotValues[name] = () => {
 				// use prerendered value only once
 				if (!didRender) {
