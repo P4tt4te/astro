@@ -222,7 +222,6 @@ export class RenderContext {
 					return renderRedirect(this);
 				case 'page': {
 					const result = await this.createResult(componentInstance!, actionApiContext);
-
 					try {
 						response = await renderPage(
 							result,

@@ -30,7 +30,6 @@ export class AstroComponentInstance {
 		this.props = props;
 		this.factory = factory;
 		this.slotValues = {};
-
 		for (const name in slots) {
 			// prerender the slots eagerly to make collection entries propagate styles and scripts
 			let didRender = false;
