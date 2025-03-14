@@ -10,14 +10,12 @@ export function renderChild(destination: RenderDestination, child: any): void | 
 		return child.then((x) => renderChild(destination, x));
 	}
 
-	console.log('renderChild : ', child, typeof child);
 	if (child instanceof SlotString) {
 		destination.write(child);
 		return;
 	}
 
 	if (isHTMLString(child)) {
-		console.log("isHTMLString");
 		destination.write(child);
 		return;
 	}
@@ -39,7 +37,6 @@ export function renderChild(destination: RenderDestination, child: any): void | 
 	}
 
 	if (typeof child === 'string') {
-		console.log("isString");
 		destination.write(markHTMLString(escapeHTML(child)));
 		return;
 	}

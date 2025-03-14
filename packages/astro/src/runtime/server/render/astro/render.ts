@@ -18,12 +18,6 @@ export async function renderToString(
 	isPage = false,
 	route?: RouteData,
 ): Promise<string | Response> {
-	console.log(
-		'renderToString runtime, component : ',
-		componentFactory.name,
-		' | isPage : ',
-		isPage,
-	);
 	const templateResult = await callComponentAsTemplateResultOrResponse(
 		result,
 		componentFactory,
@@ -38,10 +32,8 @@ export async function renderToString(
 	let str = '';
 	let renderedFirstPageChunk = false;
 
-	if (isPage && componentFactory.name !== 'Welcome') {
+	if (isPage) {
 		await bufferHeadContent(result);
-	} else {
-		console.log('bufferHeadContent not called');
 	}
 
 	const destination: RenderDestination = {
@@ -61,9 +53,6 @@ export async function renderToString(
 			str += chunkToString(result, chunk);
 		},
 	};
-
-	console.log('renderToString', destination);
-	console.log('renderToString str : ', str);
 
 	await templateResult.render(destination);
 
@@ -156,16 +145,7 @@ async function callComponentAsTemplateResultOrResponse(
 	children: any,
 	route?: RouteData,
 ) {
-	console.log('callComponentAsTemplateResultOrResponse : ', componentFactory.name, props, children);
-
-	/*
-	if (children && children.default) {
-		children.default = markHTMLString(children.default);
-	}
-	*/
-
 	const factoryResult = await componentFactory(result, props, children);
-	console.log('factoryResult : ', factoryResult);
 
 	if (factoryResult instanceof Response) {
 		return factoryResult;

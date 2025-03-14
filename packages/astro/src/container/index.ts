@@ -473,11 +473,11 @@ export class experimental_AstroContainer {
 	public async renderToString(
 		component: AstroComponentFactory,
 		options: ContainerRenderOptions = {},
-	): Promise<string> {
+	): Promise<string> {	
 		if (options.slots) {
 			options.slots = markAllSlotsAsHTMLString(options.slots);
 		}
-
+		
 		const response = await this.renderToResponse(component, options);
 		return await response.text();
 	}

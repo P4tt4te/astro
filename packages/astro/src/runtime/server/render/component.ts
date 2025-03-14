@@ -545,7 +545,6 @@ export async function renderComponentToString(
 				// `renderToString` doesn't work with emitting responses, so ignore here
 				if (chunk instanceof Response) return;
 
-				console.log("chunk : ", chunk);
 				str += chunkToString(result, chunk);
 			},
 		};
