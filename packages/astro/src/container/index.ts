@@ -12,7 +12,7 @@ import { RenderContext } from '../core/render-context.js';
 import { getParts } from '../core/routing/manifest/parts.js';
 import { getPattern } from '../core/routing/manifest/pattern.js';
 import { validateSegment } from '../core/routing/manifest/segment.js';
-import { markHTMLString, type AstroComponentFactory } from '../runtime/server/index.js';
+import type { AstroComponentFactory } from '../runtime/server/index.js';
 import type { ComponentInstance } from '../types/astro.js';
 import type { AstroMiddlewareInstance, MiddlewareHandler, Props } from '../types/public/common.js';
 import type { AstroConfig, AstroUserConfig } from '../types/public/config.js';
@@ -26,6 +26,7 @@ import type {
 	SSRResult,
 } from '../types/public/internal.js';
 import { ContainerPipeline } from './pipeline.js';
+import { SlotString } from '../runtime/server/render/slot.js';
 
 /** Public type, used for integrations to define a renderer for the container API */
 export type ContainerRenderer = {
@@ -473,11 +474,11 @@ export class experimental_AstroContainer {
 	public async renderToString(
 		component: AstroComponentFactory,
 		options: ContainerRenderOptions = {},
-	): Promise<string> {	
+	): Promise<string> {
 		if (options.slots) {
-			options.slots = markAllSlotsAsHTMLString(options.slots);
+			options.slots = markAllSlotsAsSlotString(options.slots);
 		}
-		
+
 		const response = await this.renderToResponse(component, options);
 		return await response.text();
 	}
@@ -593,10 +594,10 @@ function isNamedRenderer(renderer: any): renderer is NamedSSRLoadedRendererValue
 	return !!renderer?.name;
 }
 
-function markAllSlotsAsHTMLString(slots: Record<string, any>): Record<string, any> {
+function markAllSlotsAsSlotString(slots: Record<string, any>): Record<string, any> {
 	const markedSlots: Record<string, any> = {};
 	for (const slotName in slots) {
-		markedSlots[slotName] = markHTMLString(slots[slotName]);
+		markedSlots[slotName] = new SlotString(slots[slotName], null);
 	}
 	return markedSlots;
 }
