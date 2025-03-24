@@ -83,6 +83,7 @@ export function astroContentAssetPropagationPlugin({
 						urls,
 						crawledFiles: styleCrawledFiles,
 					} = await getStylesForURL(pathToFileURL(basePath), devModuleLoader);
+					console.log('styleCrawledFiles : ', styleCrawledFiles);
 
 					// Register files we crawled to be able to retrieve the rendered styles and scripts,
 					// as when they get updated, we need to re-transform ourselves.

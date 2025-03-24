@@ -23,6 +23,7 @@ export async function* crawlGraph(
 	const id = unwrapId(_id);
 	const importedModules = new Set<ModuleNode>();
 
+	/*
 	const moduleEntriesForId = isRootFile
 		? // "getModulesByFile" pulls from a delayed module cache (fun implementation detail),
 			// So we can get up-to-date info on initial server load.
@@ -31,14 +32,19 @@ export async function* crawlGraph(
 		: // For non-root files, we're safe to pull from "getModuleById" based on testing.
 			// TODO: Find better invalidation strategy to use "getModuleById" in all cases!
 			new Set([loader.getModuleById(id)]);
+	*/
+
+	const moduleEntriesForId = new Set([loader.getModuleById(id)]);
 
 	// Collect all imported modules for the module(s).
 	for (const entry of moduleEntriesForId) {
 		// Handle this in case an module entries weren't found for ID
 		// This seems possible with some virtual IDs (ex: `astro:markdown/*.md`)
+		
 		if (!entry) {
 			continue;
 		}
+		console.log('entry url : ', entry?.url);
 		if (id === entry.id) {
 			scanned.add(id);
 
@@ -51,6 +57,7 @@ export async function* crawlGraph(
 			// If CSS requests `importedModules` contain non-CSS files, e.g. Tailwind might add HMR
 			// dependencies as `importedModules`, we should also skip them as they aren't really
 			// imported. Without this, every hoisted script in the project is added to every page!
+			//console.log('id : ', id);
 			if (isCSSRequest(id)) {
 				continue;
 			}

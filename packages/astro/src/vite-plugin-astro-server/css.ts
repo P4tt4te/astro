@@ -21,6 +21,7 @@ export async function getStylesForURL(
 	const importedStylesMap = new Map<string, ImportedStyle>();
 	const crawledFiles = new Set<string>();
 
+	console.log('getStylesForURL');
 	for await (const importedModule of crawlGraph(loader, viteID(filePath), true)) {
 		if (importedModule.file) {
 			crawledFiles.add(importedModule.file);
